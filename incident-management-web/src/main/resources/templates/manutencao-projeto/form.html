@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layouts/template-logado}">
+
+<div layout:fragment="breadcrumb">
+	<div class="d-flex justify-content-between align-items-center">
+	  <ol>
+	    <li><a href="/index" th:text="#{company.name}"></a></li>
+	    <li th:text="#{manutencao.default.label}" ></li >
+	    <li th:text="#{manutencao.projeto.label}"></li >
+	    <li th:text="#{manutencao.formulario.label}"></li >
+	  </ol>
+	</div>	
+</div >
+
+
+<th:block layout:fragment="page_content">
+	<form action="#" th:action="${projeto.idProjeto == null} ? @{/projeto/add} : @{/projeto/update/{id}(id=${projeto.idProjeto})}" th:object="${projeto}" method="post">
+        <input type="hidden" th:field="*{idProjeto}" id="idProjeto" />
+		<!-- Page Heading -->
+		<h1 class="h3 mb-4 text-gray-800" th:text="#{manutencao.projeto.label.h2}"></h1>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-5">
+			<div class="card-header py-3">
+				<div class="col-md-4 float-right">
+					<input type="submit" class="btn btn-primary float-right" value="Salvar">
+					<a href="/projeto/list" class="btn btn-primary float-right mr-1"
+						th:text="#{manutencao.default.button.voltar}"></a>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<input type="hidden" th:field="*{idProjeto}" id="idProjeto" />
+			
+				<div class="row">
+					<div class="form-group col-md-6">
+						<label for="nomeProjeto" class="col-form-label">Nome Projeto</label>
+                        <input type="text" th:field="*{nomeProjeto}" class="form-control text-uppercase" id="nomeProjeto" required placeholder="Nome do Projeto">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('nomeProjeto')}" th:errors="*{nomeProjeto}"></div>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="projetoAbreviado" class="col-form-label">Nome do Projeto Abreviado</label>
+                        <input type="text" th:field="*{projetoAbreviado}" class="form-control text-uppercase" id="projetoAbreviado" required placeholder="Nome Abreviado">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('projetoAbreviado')}" th:errors="*{projetoAbreviado}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+                        <label for="cliente" class="col-form-label">Cliente</label>
+                        <select type="text" th:field="*{cliente}" required class="form-control" id="cliente">
+                        	<option value="" >Selecione</option>
+                        	<option th:each="clienteIndex, clienteStat : ${availableClientes}" th:value="${clienteIndex.idCliente}" th:text="${clienteIndex.nomeCliente}" ></option>
+                        </select  >
+                        <span th:if="${#fields.hasErrors('cliente')}" th:errors="*{cliente}" class="text-danger"></span>
+                    </div>
+					
+					<div class="form-group col-md-6">
+						<label for="descricaoProjeto" class="col-form-label">Descricao do Projeto</label>
+                        <input type="text" th:field="*{descricaoProjeto}" class="form-control text-uppercase" id="descricaoProjeto" required placeholder="Descricao do Projeto">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('descricaoProjeto')}" th:errors="*{descricaoProjeto}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="diasRetencaoTickets" class="col-form-label">Retencao de tickets (em dias)</label>
+                        <input type="number" th:field="*{diasRetencaoTickets}" class="form-control text-uppercase" id="diasRetencaoTickets" required placeholder="Retencao de dias">
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('diasRetencaoTickets')}" th:errors="*{diasRetencaoTickets}"></div>
+					</div>
+					
+					<div class="form-group col-md-6">
+						<label for="status" class="col-form-label">Status</label>
+						<select type="text" th:field="*{status}" required class="form-control" id="status">
+							<option value="">Selecione</option>
+							<option value="ATIVO">ATIVO</option>
+							<option value="INATIVO">INATIVO</option>
+						</select>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+					</div>
+					
+					
+					
+				</div>
+				<div class="row">
+					<div class="form-group col-md-6">
+                        <label for="colaboradorResponsavel" class="col-form-label">Responsavel</label>
+                        <select type="text" th:field="*{colaboradorResponsavel}" required class="form-control" id="colaboradorResponsavel">
+                        	<option value="" >Selecione</option>
+                        	<option th:each="colaboradorIndex, colaboradorStat : ${availableResponsaveis}" th:value="${colaboradorIndex.idColaborador}" th:text="${colaboradorIndex.nomeColaborador}" ></option>
+                        </select  >
+                        <span th:if="${#fields.hasErrors('colaboradorResponsavel')}" th:errors="*{colaboradorResponsavel}" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="timeResponsavel" class="col-form-label">Time Responsavel</label>
+                        <select type="text" th:field="*{timeResponsavel}" required class="form-control" id="timeResponsavel">
+                        	<option value="" >Selecione</option>
+                        	<option th:each="timeIndex, timeStat : ${availableTimes}" th:value="${timeIndex.idTime}" th:text="${timeIndex.nomeTime}" ></option>
+                        </select  >
+                        <span th:if="${#fields.hasErrors('timeResponsavel')}" th:errors="*{timeResponsavel}" class="text-danger"></span>
+                    </div>
+				</div>	
+					
+				<th:block layout:insert="fragments/audit-form"></th:block>
+				
+			</div>
+	</form>
+</th:block>
